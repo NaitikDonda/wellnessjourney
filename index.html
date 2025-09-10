@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youth Mental Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="gradient-orb"></div>
+        <div class="floating-particles"></div>
+    </div>
+
+    <!-- Home/Dashboard Screen -->
+    <div id="home-screen" class="screen active">
+        <div class="home-container">
+            <div class="welcome-section">
+                <h1 id="welcome-message">Welcome to Your Wellness Journey</h1>
+                <p id="personalized-greeting">How are you feeling today?</p>
+            </div>
+            
+            <!-- Personalized Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card" id="mood-stat-card">
+                    <div class="stat-icon">😊</div>
+                    <div class="stat-content">
+                        <h3 id="mood-stat-title">Current Mood</h3>
+                        <p id="mood-stat-value">Not logged yet</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" id="streak-stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-content">
+                        <h3 id="streak-stat-title">Check-in Streak</h3>
+                        <p id="streak-stat-value">0 days</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" id="activity-stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <h3 id="activity-stat-title">Activities Done</h3>
+                        <p id="activity-stat-value">0 this week</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Insight Card -->
+            <div class="ai-insight-card" id="ai-insight-card">
+                <div class="ai-insight-header">
+                    <div class="ai-insight-avatar">🤖</div>
+                    <h3>AI Wellness Insight</h3>
+                </div>
+                <p id="ai-insight-message">Start tracking your mood to get personalized insights!</p>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="dashboard-main-card">
+                <h2>Quick Actions</h2>
+                <div class="dashboard-button-grid">
+                    <button class="dashboard-action-button" onclick="showScreen('chat-screen')">
+                        <div class="dashboard-button-icon">💬</div>
+                        <span>Chat with AI</span>
+                    </button>
+                    <button class="dashboard-action-button" onclick="showScreen('mood-screen')">
+                        <div class="dashboard-button-icon">😊</div>
+                        <span>Mood Tracker</span>
+                    </button>
+                    <button class="dashboard-action-button" onclick="showScreen('exercises-screen')">
+                        <div class="dashboard-button-icon">🧘</div>
+                        <span>Exercises</span>
+                    </button>
+                    <button class="dashboard-action-button" onclick="showScreen('emergency-screen')">
+                        <div class="dashboard-button-icon">🆘</div>
+                        <span>Emergency Help</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="recent-activity" id="recent-activity">
+                <h3>Recent Activity</h3>
+                <div id="activity-feed">
+                    <p class="no-activity">No activity yet. Start by logging your mood!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Screen -->
+    <div id="chat-screen" class="screen">
+        <div class="chat-container">
+            <div class="chat-header">
+                <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                <h2>AI Chat Support</h2>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message ai-message">
+                    <div class="message-bubble">
+                        Hello! I'm here to support you. How are you feeling today?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Type your message..." class="chat-input">
+                <button class="send-button" onclick="sendMessage()">
+                    <span class="send-icon">➤</span>
+                </button>
+            </div>
+            <div class="typing-indicator" id="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mood Tracker Screen -->
+    <div id="mood-screen" class="screen">
+        <div class="mood-container">
+            <div class="chat-header">
+                <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                <h2>Mood Tracker</h2>
+            </div>
+            <div class="glass-card mood-card">
+                <h3>How are you feeling today?</h3>
+                <div class="mood-emojis">
+                    <button class="mood-emoji" onclick="logMood('happy', '😃')" data-mood="happy">😃</button>
+                    <button class="mood-emoji" onclick="logMood('neutral', '😐')" data-mood="neutral">😐</button>
+                    <button class="mood-emoji" onclick="logMood('sad', '😔')" data-mood="sad">😔</button>
+                    <button class="mood-emoji" onclick="logMood('very-sad', '😢')" data-mood="very-sad">😢</button>
+                    <button class="mood-emoji" onclick="logMood('angry', '😡')" data-mood="angry">😡</button>
+                </div>
+            </div>
+            <div class="mood-chart-container">
+                <canvas id="moodChart" width="400" height="200"></canvas>
+            </div>
+            <div class="mood-logs" id="mood-logs">
+                <!-- Mood logs will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Mood Response Modal -->
+    <div id="ai-mood-modal" class="ai-mood-modal">
+        <div class="ai-modal-content">
+            <div class="ai-modal-header">
+                <div class="ai-avatar">🤖</div>
+                <h3 id="ai-modal-title">AI Support</h3>
+                <button class="ai-modal-close" onclick="closeAIModal()">×</button>
+            </div>
+            <div class="ai-modal-body">
+                <p id="ai-modal-message">How are you feeling today?</p>
+                <div class="ai-modal-input-container">
+                    <input type="text" id="ai-mood-response" placeholder="Share your thoughts..." class="ai-mood-input">
+                    <button class="ai-send-button" onclick="sendAIMoodResponse()">
+                        <span>Send</span>
+                    </button>
+                </div>
+            </div>
+            <div class="ai-modal-footer">
+                <button class="ai-modal-skip" onclick="closeAIModal()">Skip for now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exercises Screen -->
+    <div id="exercises-screen" class="screen">
+        <div class="exercises-container">
+            <div class="chat-header">
+                <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                <h2>Exercises & Activities</h2>
+            </div>
+            <div class="exercises-grid">
+                <div class="exercise-card">
+                    <div class="exercise-icon">🧘</div>
+                    <h3>Breathing Exercise</h3>
+                    <p>Practice deep breathing to reduce stress and anxiety</p>
+                    <button class="exercise-button" onclick="startExercise('breathing')">Start</button>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-icon">🎵</div>
+                    <h3>Meditation</h3>
+                    <p>Guided meditation for mindfulness and relaxation</p>
+                    <button class="exercise-button" onclick="startExercise('meditation')">Start</button>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-icon">📝</div>
+                    <h3>Journaling</h3>
+                    <p>Write down your thoughts and feelings</p>
+                    <button class="exercise-button" onclick="startExercise('journaling')">Start</button>
+                </div>
+                <div class="exercise-card">
+                    <div class="exercise-icon">🎨</div>
+                    <h3>Creative Expression</h3>
+                    <p>Express yourself through art and creativity</p>
+                    <button class="exercise-button" onclick="startExercise('creative')">Start</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Help Screen -->
+    <div id="emergency-screen" class="screen">
+        <div class="emergency-container">
+            <div class="chat-header">
+                <button class="back-button" onclick="showScreen('home-screen')">←</button>
+                <h2>Emergency Help</h2>
+            </div>
+            <div class="glass-card emergency-card">
+                <div class="alert-icon">⚠️</div>
+                <h3>Get Help Now</h3>
+                <p>If you're in crisis, please reach out for help immediately</p>
+                <div class="emergency-buttons">
+                    <button class="emergency-button" onclick="callEmergency('988')">
+                        <span class="emergency-icon">📞</span>
+                        Crisis Hotline (988)
+                    </button>
+                    <button class="emergency-button" onclick="callEmergency('911')">
+                        <span class="emergency-icon">🚨</span>
+                        Emergency Services (911)
+                    </button>
+                    <button class="emergency-button" onclick="openChat('crisis')">
+                        <span class="emergency-icon">💬</span>
+                        Crisis Text Line
+                    </button>
+                    <button class="emergency-button" onclick="findLocalHelp()">
+                        <span class="emergency-icon">📍</span>
+                        Find Local Help
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
